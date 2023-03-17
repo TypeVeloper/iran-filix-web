@@ -1,0 +1,25 @@
+.hero-slide {  .swiper-slide {
+    user-select: none;
+    margin-top: 20em;
+    transition: all 0.3s;
+    opacity: 0;
+    filter: blur(4px);
+    &.swiper-slide-active {
+      opacity: 1;
+      filter: blur(0px);
+      margin-top: 0px;
+      transform: scale(1.5) rotate(0deg);
+      z-index: 44;
+    }
+    &.swiper-slide-prev {
+      opacity: 1;
+      margin-top: 0;
+      transform: rotate(0deg) translateX(0em);
+    }
+    &.swiper-slide-next {
+      opacity: 0;
+
+      transform: rotate(0) translateX(15em) translateY(-10em);
+    }
+  }
+}
