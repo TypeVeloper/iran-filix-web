@@ -1,49 +1,39 @@
 import Layout from "@components/layout/layout";
 import Container from "@components/ui/container";
 import MovieCarousel from "@containers/movies-carousel";
-import { MoviesType } from "@framework/types";
-import { GetStaticProps } from "next";
+import useLastMovieQuery from "@framework/last-movie/get-all-last-movies";
 import dynamic from "next/dynamic";
-import React from "react";
-import { fetchLastMovie } from "../framework/last-movie/get-all-last-movies";
 
 const HeroNewMovie = dynamic(() => import("@containers/hreo-new-movie"));
-// const inter = Inter({ subsets: ["latin"] });
-interface Props {
-  data?: any;
-}
-export default function Home({ data }: Props) {
-  const [newMovies, setNewMovies] = React.useState<Array<MoviesType>>([]);
-  React.useEffect(() => {
-    setNewMovies(data);
-    return () => {
-      setNewMovies([]);
-    };
-  }, [data]);
+
+export default function Home() {
+  const { data, isLoading } = useLastMovieQuery();
+
+  // const [newMovies, setNewMovies] = React.useState<Array<MoviesType>>([]);
 
   const SectionTypeOfMovies = [
     {
-      data: newMovies,
+      data: data,
       title: "آخرین فیلم و سریال های اضافه شده",
       url: "/",
     },
     {
-      data: newMovies,
+      data: data,
       title: "ویژه ها",
       url: "/",
     },
     {
-      data: newMovies,
+      data: data,
       title: "سریال های بروز شده",
       url: "/",
     },
     {
-      data: newMovies.filter((item) => item.type !== "serie"),
+      data: data?.filter((item) => item.type !== "serie"),
       title: "فیلم ها با بیشترین دانلود",
       url: "/",
     },
     {
-      data: newMovies,
+      data: data?.filter((item) => item.type === "serie"),
       title: "سریال ها با بیشترین دانلود",
       url: "/",
     },
@@ -51,10 +41,12 @@ export default function Home({ data }: Props) {
 
   return (
     <Container>
-      <HeroNewMovie data={newMovies} />
+      <HeroNewMovie data={data} isLoading={isLoading} />
+
       {SectionTypeOfMovies.map((item, idx) => {
         return (
           <MovieCarousel
+            isLoading={isLoading}
             key={idx}
             data={item.data}
             title={item.title}
@@ -67,9 +59,3 @@ export default function Home({ data }: Props) {
 }
 
 Home.Layout = Layout;
-
-export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await fetchLastMovie();
-
-  return { props: { data } };
-};

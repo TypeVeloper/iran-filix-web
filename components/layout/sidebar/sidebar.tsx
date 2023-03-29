@@ -23,4 +23,6 @@ const Sidebar = () => {
   );
 };
 
+const SidebarListItem = () => {};
+
 export default Sidebar;

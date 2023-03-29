@@ -66,10 +66,25 @@ module.exports = {
       },
       animation: {
         shine: "shine 1s",
+        SideInBlurredRight: "SideInBlurredRight .3s",
       },
       keyframes: {
         shine: {
           "100%": { left: "125%" },
+        },
+        SideInBlurredRight: {
+          "0%": {
+            transform: "translateX(1000px) scaleX(2.5) scaleY(0.2)",
+            transformOrigin: "0% 50%",
+            filter: "blur(40px)",
+            opacity: 0,
+          },
+          "100%": {
+            transform: "translateX(0) scaleY(1) scaleX(1)",
+            transformOrigin: "50% 50%",
+            filter: "blur(0)",
+            opacity: 1,
+          },
         },
       },
     },

@@ -1,6 +1,7 @@
 export const getToken = () => {
-  if (typeof window === undefined) {
+  const token = process.env.NEXT_PUBLIC_TOKEN;
+  if (typeof window === undefined && !token) {
     return null;
   }
-  return "4F5A9C3D9A86FA54EACEDDD635185";
+  return token;
 };

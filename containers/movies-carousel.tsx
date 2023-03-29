@@ -1,4 +1,5 @@
-import BannerCard from "@components/common/banner-card";import Carousel from "@components/ui/carousel/carousel";
+import BannerCard from "@components/common/banner-card";import BannerCardSkeleton from "@components/skeleton/banner-card.sl";
+import Carousel from "@components/ui/carousel/carousel";
 import { MoviesType } from "@framework/types";
 import cn from "classnames";
 import Link, { LinkProps } from "next/link";
@@ -6,10 +7,11 @@ import type { FC } from "react";
 import { SwiperSlide } from "swiper/react";
 
 interface Props {
-  data: MoviesType[];
+  data: MoviesType[] | undefined;
   className?: string;
   href: LinkProps["href"];
   title: string;
+  isLoading: boolean;
 }
 
 const breakpoints = {
@@ -26,7 +28,14 @@ const breakpoints = {
     spaceBetween: 10,
   },
 };
-const MovieCarousel: FC<Props> = ({ data, className, title, href = "/" }) => {
+
+const MovieCarousel: FC<Props> = ({
+  data,
+  className,
+  title,
+  href = "/",
+  isLoading,
+}) => {
   return (
     <div className={`w-auto flex flex-col gap-5 mt-5 ${cn(className)}`}>
       <Link href={href}>
@@ -43,20 +52,35 @@ const MovieCarousel: FC<Props> = ({ data, className, title, href = "/" }) => {
         navigation={true}
         loop={false}
         carouselClassName='!py-6'>
-        {data?.map((item) => {
-          return (
-            <SwiperSlide key={`movie-carousel-item-${item.id}`}>
-              <BannerCard
-                movieType={item.type}
-                href={`potplayer://${item.sources[0]?.url}`}
-                imgUrl={item.image}
-                title={item.title}
-                imdb={item.imdb}
-                rating={item.rating}
-              />
-            </SwiperSlide>
-          );
-        })}
+        {isLoading ? (
+          <>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
+              return (
+                <SwiperSlide key={`movie-carousel-item-${item}`}>
+                  <BannerCardSkeleton />
+                </SwiperSlide>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            {data?.map((item) => {
+              return (
+                <SwiperSlide key={`movie-carousel-item-${item.id}`}>
+                  <BannerCard
+                    movieType={item.type}
+                    href={`potplayer://${item.sources[0]?.url}`}
+                    imgUrl={item.image}
+                    effectActive={true}
+                    title={item.title}
+                    imdb={item.imdb}
+                    rating={item.rating}
+                  />
+                </SwiperSlide>
+              );
+            })}
+          </>
+        )}
       </Carousel>
     </div>
   );
