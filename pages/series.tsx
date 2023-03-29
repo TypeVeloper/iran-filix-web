@@ -1,15 +1,11 @@
 import Layout from "@components/layout/layout";import Container from "@components/ui/container";
 import MovieCarousel from "@containers/movies-carousel";
+import useLastMovieQuery from "@framework/last-movie/get-all-last-movies";
 import { MoviesType } from "@framework/types";
-import { GetStaticProps } from "next";
 import React from "react";
-import { fetchLastMovie } from "../framework/last-movie/get-all-last-movies";
+export default function Series() {
+  const { data, isLoading } = useLastMovieQuery();
 
-// const inter = Inter({ subsets: ["latin"] });
-interface Props {
-  data?: any;
-}
-export default function Series({ data }: Props) {
   const [newMovies, setNewMovies] = React.useState<any>([]);
   React.useEffect(() => {
     setNewMovies(data);
@@ -20,9 +16,10 @@ export default function Series({ data }: Props) {
   return (
     <Container>
       <MovieCarousel
-        data={newMovies.filter(
+        data={newMovies?.filter(
           (item: MoviesType) => item.type === "serie" && item,
         )}
+        isLoading={isLoading}
         title={"آخرین سریال های اضافه شده"}
         href='/'
       />
@@ -31,9 +28,3 @@ export default function Series({ data }: Props) {
 }
 
 Series.Layout = Layout;
-
-export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await fetchLastMovie();
-
-  return { props: { data } };
-};
